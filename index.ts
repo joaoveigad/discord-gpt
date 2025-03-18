@@ -1,10 +1,7 @@
-import { Collection, MessageFlags } from "discord.js";
+import { Collection, MessageFlags, Client, Events, GatewayIntentBits } from "discord.js";
 require('dotenv/config');
-const { Client, Events, GatewayIntentBits } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
-
-
 
 class extendedClient extends Client {
     commands: Collection<string, any>;
@@ -16,70 +13,41 @@ class extendedClient extends Client {
 }
 const client = new extendedClient();
 
-client.once(Events.ClientReady, (readyClient: { user: { tag: any; }; }) => {
-    console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-})
-
-
-
-console.log(process.env.DISCORD_TOKEN)      
-console.log(process.env.DISCORD_CLIENT_ID)      
-console.log(process.env.DISCORD_GUILD_ID)
-
-
-
-client.commands = new Collection();
-
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath)
 
 for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
-    console.log(`${commandsPath}, lancem a Millia no Strive`)
+    console.log(commandsPath);
+
     const commandFiles = fs.readdirSync(commandsPath).filter((file: string) => file.endsWith('.js'));
-    console.log(commandFiles)
+    console.log(commandFiles);
+
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
-        const command = require(filePath)
+        const command = require(filePath);
+
         if ('data' in command && 'execute' in command) {
-            client.commands.set(command.data.name, command)
-        }
-        else {
-            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`)
+            client.commands.set(command.data.name, command);
+        } else {
+            console.log(`[AVISO] O comando em ${filePath} está faltando uma propriedade "data" ou "execute" necessária.`);
         }
     }
 }
 
-client.on(Events.InteractionCreate, async (interaction: any) => {
-    if (!interaction.isChatInputCommand()) return;
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter((file: string) => file.endsWith('.js'));
 
-    const command = interaction.client.commands.get(interaction.commandName);
-    if (!command) {
-        console.error(`Command ${interaction.commandName} not found`);
-        return;
+for (const file of eventFiles) {
+    const filePath = path.join(eventsPath, file);
+    const event = require(filePath);
+    if (event.once) {
+        client.once(event.name, (...args: any) => event.execute(...args));
     }
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({
-                content: 'There was an error while executing this command.',
-                flags: MessageFlags.Ephemeral
-            });
-        } else {
-            await interaction.reply({
-                content: 'There was an error while executing this command.',
-                flags: MessageFlags.Ephemeral
-            });
-        }
+    else {
+        client.on(event.name, (...args: any) => event.execute(...args));
     }
-
-    console.log(interaction);
-});
-
+}
 
 
 console.log(Client);
