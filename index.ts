@@ -1,6 +1,6 @@
-const { Client, Events, GatewayIntentBits } = require('discord.js');
-import { Collection, MessageFlags } from 'discord.js';
+import { Collection, MessageFlags } from "discord.js";
 require('dotenv/config');
+const { Client, Events, GatewayIntentBits } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -19,6 +19,14 @@ const client = new extendedClient();
 client.once(Events.ClientReady, (readyClient: { user: { tag: any; }; }) => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 })
+
+
+
+console.log(process.env.DISCORD_TOKEN)      
+console.log(process.env.DISCORD_CLIENT_ID)      
+console.log(process.env.DISCORD_GUILD_ID)
+
+
 
 client.commands = new Collection();
 
