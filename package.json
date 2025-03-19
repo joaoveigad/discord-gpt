@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "up": "npx ts-node index.ts"
+    "up": "npx ts-node index.ts",
+    "deploy": "node deploy-commands.js"
   },
   "repository": {
     "type": "git",

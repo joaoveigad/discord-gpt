@@ -5,7 +5,7 @@ require('dotenv/config');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('bot')
-        .setDescription('Responde com uma GPTada violenta')
+        .setDescription('Responde usando um modelo da OpenAI API')
         .addStringOption(option =>
             option.setName('input')
                 .setDescription('Input pra AI')
