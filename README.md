@@ -8,7 +8,7 @@ Depois de configurado através do .env ou config.json, execute o script 'npm run
 
 E então, 'npm run up' para fazê-lo ficar online.
 
-Para edição do comando slash do bot, altere dentro do método .setName() 
+Para edição do comando de input, altere o nome de .setName('bot'), para .setName('SEU INPUT AQUI')
 
 Novos comandos devem ser adicionados na pasta /commands/utility e necessariamente contar com a extensão .js
 
