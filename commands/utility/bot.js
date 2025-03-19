@@ -23,10 +23,11 @@ module.exports = {
                 model: "gpt-4o-mini",
                 store: true,
             });
-
-            // await interaction.reply(completion.choices[0].message.content);
+            
             console.log(completion.choices[0])
-            await interaction.reply(completion.choices[0].message.content);
+            await interaction.reply('Pensando!')
+            const edit = completion.choices[0].message.content
+            await interaction.editReply(edit);
 
         } catch (error) {
             console.error('Erro gerando resposta:', error);
