@@ -1,13 +1,14 @@
-import { Collection, MessageFlags, Client, Events, GatewayIntentBits } from "discord.js";
+import { Collection, Client, GatewayIntentBits } from "discord.js";
 require('dotenv/config');
 const fs = require('node:fs');
 const path = require('node:path');
+const receiveMessage = require('./functions/gpt');
 
 class extendedClient extends Client {
     commands: Collection<string, any>;
 
     constructor(){
-        super({ intents: GatewayIntentBits.Guilds });
+        super({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
         this.commands = new Collection(); 
     }
 }
@@ -34,6 +35,15 @@ for (const folder of commandFolders) {
         }
     }
 }
+client.on("messageCreate", async (message) => {
+    if (client.user && message.mentions.users.has(client.user.id)) {
+        const cleanMessage = message.content.replace(`<@${client.user.id}>`, "").trim(); // tira o ID do usuário da mention
+        const replyGPT = await receiveMessage(cleanMessage);  
+        const think = await message.reply('Pensando!'); 
+        await think.edit(replyGPT) 
+    }
+});
+
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter((file: string) => file.endsWith('.js'));

@@ -10,5 +10,7 @@ E então, 'npm run up' para fazê-lo ficar online.
 
 Para edição do comando de input, altere o nome de .setName('bot'), para .setName('SEU INPUT AQUI')
 
+Foi adicionada no index.ts uma chamada da função gpt.js para retorno da funcionalidade em uma reply @ convencional, seguindo a mesma lógica.
+
 Novos comandos devem ser adicionados na pasta /commands/utility e necessariamente contar com a extensão .js
 
