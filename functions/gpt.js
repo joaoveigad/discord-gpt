@@ -15,6 +15,12 @@ async function receiveMessage(message) {
             store: true
         });
         const reply = await completion.choices[0].message.content
+
+        if (reply.length > 2000){
+            const  cutReply = reply.slice(0,1930) + '\n\Mensagem cortada pelos limites de caracteres do Discord 😢'
+            console.log(cutReply)
+            return cutReply;
+        }
         console.log(completion.choices[0].message.content)
         return reply
     } catch (error) {
