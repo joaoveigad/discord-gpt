@@ -1,16 +1,29 @@
 const { OpenAI } = require('openai');
+const fs = require('fs')
 require('dotenv/config');
+
+const listaPlayers = JSON.parse(fs.readFileSync('./players.json', 'utf8'));
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_KEY,
 });
 
+console.log(listaPlayers)
 
 async function receiveMessage(message) {
 
     try {
         const completion = await openai.chat.completions.create({
-            messages: [{ role: "user", content: message }],
+            messages: [
+                {   
+                    role: "system",
+                    content: `Você é um bot de Discord para o Time Foda-se. Você ajuda e às vezes faz uma piadinha e um trashtalk com os membros. Dê trashtalk nos players às vezes. Aqui está a lista de jogadores: ${JSON.stringify(listaPlayers)}`
+                },
+                { role: "user",
+                     content: message 
+                    }
+            
+                ],
             model: "gpt-4o",
             store: true
         });
